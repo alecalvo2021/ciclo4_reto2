@@ -2,17 +2,26 @@ package com.example.reto2.adaptadores;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.reto2.MainActivity;
 import com.example.reto2.R;
+import com.example.reto2.datos.DBHelper;
 import com.example.reto2.modelo.Producto;
+import com.example.reto2.util.HandlingImages;
+import com.example.reto2.util.PruductsRepository;
 
 import java.util.List;
 
@@ -38,6 +47,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.View
     @Override
     public void onBindViewHolder(final ProductosAdapter.ViewHolder holder, final int position) {
         holder.bindData(listaProductos.get(position));
+
     }
 
     @Override
@@ -47,8 +57,14 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.View
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView iconImage;
-        TextView nombreProducto, descripcionProducto, valorProducto;
+       private int  id=0;
+       private ImageView iconImage;
+       private  TextView nombreProducto, descripcionProducto, valorProducto;
+       private Button btnDelete, btnUpdate;
+       private DBHelper dbHelper;
+       private String TABLE_NAME="PRODUCTS";
+       private PruductsRepository pruductsRepository;
+
         ViewHolder(View view){
             super(view);
             iconImage=view.findViewById(R.id.imgProducto);
@@ -62,8 +78,10 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.View
         void bindData(final Producto producto){
             nombreProducto.setText(producto.getNombre());
             descripcionProducto.setText(producto.getDescripcion());
-            valorProducto.setText("$ "+producto.getValor());
-            iconImage.setImageResource(producto.getImagenId());
+            valorProducto.setText("$ "+producto.getValor()+" UND");
+            HandlingImages handlingImages =new HandlingImages();
+            iconImage.setImageBitmap(handlingImages.imagetoBitmap(producto.getImage()));
+            id = producto.getId();
 
         }
 

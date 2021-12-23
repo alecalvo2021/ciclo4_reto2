@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reto2.R;
 import com.example.reto2.modelo.Servicio;
+import com.example.reto2.util.HandlingImages;
 
 import java.util.List;
 
@@ -23,7 +24,6 @@ public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.View
 
     public ServiciosAdapter(List<Servicio> servicios, Context context){
         this.inflater=LayoutInflater.from(context);
-        System.out.println("estmo en el constructor");
         this.listaServicios=servicios;
 
     }
@@ -60,7 +60,7 @@ public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.View
         void bindData(final Servicio servicios){
             nombreServicio.setText(servicios.getNombreServicio());
             descripcionServicio.setText(servicios.getDescripcionServicio());
-            iconImage.setImageResource(servicios.getImagenServicio());
+            iconImage.setImageBitmap(new HandlingImages().imagetoBitmap(servicios.getImageService()));
 
         }
 

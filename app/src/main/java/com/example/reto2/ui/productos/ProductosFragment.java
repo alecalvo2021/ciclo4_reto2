@@ -1,6 +1,7 @@
 package com.example.reto2.ui.productos;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,42 +21,44 @@ import com.example.reto2.FormActivity;
 import com.example.reto2.R;
 import com.example.reto2.adaptadores.ProductosAdapter;
 import com.example.reto2.databinding.FragmentProductoBinding;
+import com.example.reto2.datos.DBHelper;
 import com.example.reto2.modelo.Producto;
+import com.example.reto2.util.PruductsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductosFragment extends Fragment {
-
-    FragmentProductoBinding binding;
-    RecyclerView reciclerView;
-    List<Producto> productos;
-
+    private FragmentProductoBinding binding;
+    private RecyclerView reciclerView;
+    private DBHelper dbHelper;
+    private  List<Producto> productos;
+    private String TABLE_NAME="PRODUCTS";
+    private PruductsRepository pruductsRepository;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_producto, container, false);
-        productos = new ArrayList<>();
-        reciclerView = view.findViewById(R.id.recicle_productos);
-        reciclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        llenarLista();
-        ProductosAdapter adapter = new ProductosAdapter(productos, getContext());
-        reciclerView.setAdapter(adapter);
+        try{
+            dbHelper = new DBHelper(getContext());
+            Cursor cursor = dbHelper.getData(TABLE_NAME);
+            pruductsRepository = new PruductsRepository();
+
+            productos = pruductsRepository.listProduct(cursor);
+
+            reciclerView = view.findViewById(R.id.recicle_productos);
+            reciclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            ProductosAdapter adapter = new ProductosAdapter(productos, getContext());
+            reciclerView.setAdapter(adapter);
+
+
+        }catch (Exception e){
+            Toast.makeText(getContext(),e.toString(),Toast.LENGTH_SHORT).show();
+        }
         return view;
-
     }
 
-    private void llenarLista() {
 
-        productos.add(new Producto("AREQUIPE DE CAFÉ", "Elaborado con altos estándares " +
-                "de calidad y materias primas cuidadosamente seleccionadas.", 17600, R.drawable.arequipe));
-        productos.add(new Producto("CAFECITAS", "Deliciosas galletas con café para acompañar momentos con amigos o en familia", 14400, R.drawable.cafecitas));
-        productos.add(new Producto("MERMELADA", "Una delicia de sabor y originalidad, " +
-                "elaborada con pulpa de fruta 100% natural.", 7200, R.drawable.mermelada));
-        productos.add(new Producto("CAFÉ", "Un café afrutado y suave, sin químicos ni pesticidas amigable con el medio ambiente.\n" +
-                "\n", 26900, R.drawable.cafe_salento));
-
-    }
 
 
     @Override
@@ -71,6 +75,7 @@ public class ProductosFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -80,22 +85,25 @@ public class ProductosFragment extends Fragment {
         switch (item.getItemId()){
             case R.id.action_add:
                     intent = new Intent(getContext(), FormActivity.class);
-                    intent.putExtra("name","Agregar Productos");
+                    intent.putExtra("name",TABLE_NAME);
                 getActivity().startActivity(intent);
                 return true;
             case R.id.action_update:
-                    intent = new Intent(getContext(), FormActivity.class);
-                    intent.putExtra("name","Actualizar Producto");
+                intent = new Intent(getContext(), FormActivity.class);
+                intent.putExtra("name",TABLE_NAME);
                 getActivity().startActivity(intent);
                 return true;
             case R.id.action_delete:
-                    intent = new Intent(getContext(), FormActivity.class);
-                    intent.putExtra("name","eliminar Producto");
+                intent = new Intent(getContext(), FormActivity.class);
+                intent.putExtra("name",TABLE_NAME);
                 getActivity().startActivity(intent);
                 return true;
+
 
             default:return super.onOptionsItemSelected(item);
         }
 
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.reto2;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 
@@ -20,10 +21,12 @@ public class MainActivity extends AppCompatActivity  {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+    public static LayoutInflater layoutInflater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        layoutInflater = getLayoutInflater();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

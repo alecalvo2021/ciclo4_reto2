@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reto2.R;
 import com.example.reto2.modelo.Tienda;
+import com.example.reto2.util.HandlingImages;
 
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class TiendaAdapter extends RecyclerView.Adapter<TiendaAdapter.ViewHolder
             nombreTienda.setText(tienda.getNombreTienda());
             ubicacionTienda.setText(tienda.getUbicacionTienda());
             horarioTienda.setText(tienda.getHorarioTienda());
-            iconImage.setImageResource(tienda.getIdImagenTienda());
+            iconImage.setImageBitmap(new HandlingImages().imagetoBitmap(tienda.getImagenTienda()));
 
         }
 

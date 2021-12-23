@@ -1,16 +1,26 @@
 package com.example.reto2.modelo;
 
 public class Producto {
+    private int id;
     private final String nombre;
     private final String descripcion;
-    private final int imagenId;
-    private final double valor;
+    private byte[] image;
+    private  String valor;
 
-    public Producto(String nombre, String descripcion, double valor, int imagenId) {
+    public Producto(int id, String nombre, String descripcion, String valor, byte[] image) {
+        this.id=id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.valor = valor;
-        this.imagenId= imagenId;
+        this.image= image;
+    }
+
+    public Producto(String nombre, String descripcion, String valor, int imagenId) {
+        this.id=id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.valor = valor;
+        this.image= image;
     }
 
     public String getNombre() {
@@ -21,12 +31,23 @@ public class Producto {
         return descripcion;
     }
 
-    public double getValor() {
+    public String getValor() {
         return valor;
     }
 
-    public int getImagenId() {
-        return imagenId;
+    public byte[] getImage() {
+        return image;
     }
 
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

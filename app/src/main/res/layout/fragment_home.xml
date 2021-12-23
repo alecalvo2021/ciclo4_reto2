@@ -14,5 +14,6 @@
         android:layout_height="match_parent"
         android:layout_margin="0dp"
         android:scaleType="fitXY"
-        android:src="@drawable/fondo_de_binevenida_app__2_" />
+        android:src="@drawable/metro"
+        app:srcCompat="@drawable/metro" />
 </LinearLayout>

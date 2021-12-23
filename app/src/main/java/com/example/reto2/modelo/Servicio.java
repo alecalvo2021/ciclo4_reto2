@@ -4,12 +4,24 @@ public class Servicio {
 
     private final String nombreServicio;
     private final String descripcionServicio;
-    private int imagenServicio;
+    private byte[] imageService;
+    private String valor;
+    private int id;
 
-    public Servicio(String nombreServicio, String descripcionServicio, int imagenServicio) {
+
+    public Servicio(int id, String nombreServicio, String descripcionServicio, String valor, byte[] imageService) {
+        this.id=id;
         this.nombreServicio = nombreServicio;
         this.descripcionServicio = descripcionServicio;
-        this.imagenServicio = imagenServicio;
+        this.valor=valor;
+        this.imageService = imageService;
+    }
+    public Servicio(String nombreServicio, String descripcionServicio, String valor, byte[] imageService) {
+        this.id=id;
+        this.nombreServicio = nombreServicio;
+        this.descripcionServicio = descripcionServicio;
+        this.valor= valor;
+        this.imageService = imageService;
     }
 
     public String getNombreServicio() {
@@ -20,8 +32,31 @@ public class Servicio {
         return descripcionServicio;
     }
 
-    public int getImagenServicio() {
-        return imagenServicio;
+    public void setImagenServicio(byte[] imageService) {
+        this.imageService = imageService;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public byte[] getImageService() {
+        return imageService;
+    }
+
+    public String getValor() {
+        return valor;
+    }
+
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
+
+    public void setImageService(byte[] imageService) {
+        this.imageService = imageService;
+    }
 }
