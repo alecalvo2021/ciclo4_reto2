@@ -3,8 +3,8 @@ package com.example.reto2;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -15,7 +15,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,104 +24,131 @@ import android.widget.Toast;
 
 import com.example.reto2.datos.DBHelper;
 import com.example.reto2.util.HandlingImages;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.example.reto2.databinding.ActivityFormMapsBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class FormActivity extends AppCompatActivity implements  View.OnClickListener {
+public class FormMapsActivity extends FragmentActivity implements OnMapReadyCallback,  View.OnClickListener {
     private final int REQUEST_CODE_GALLERY = 999;
     private final int ADD=1;
     private final int UPDATE=2;
     private final int DELETE=3;
-
-    private TextView textView;
-    private EditText field1, field2, field3, field4;
-    private Button  btnInsert, btnChose, btnDelete, btnUpdate, btnSearch;
-    private ImageView imageView;
+    private GoogleMap mMap;
+    private String nameTable;
     private DBHelper dbHelper;
-    private String name;
-    String field1Insert;
-    String field2Insert;
-    String field3Insert;
-    byte []imageInsert;
+    private ActivityFormMapsBinding binding;
+    private EditText id, name, description;
+    private ImageView imagestore;
+    private TextView location;
+    private Button btnInsert, btnSearch, btnUpdate, btnDelete, btnChoose;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        dbHelper = new DBHelper(getApplicationContext());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_form);
 
-        textView = findViewById(R.id.txtMensage);
-        field1 = findViewById(R.id.editField1);
-        field2 =  findViewById(R.id.editField2);
-        field3 = findViewById(R.id.editField3);
-        field4 = findViewById(R.id.txtId);
-        btnInsert = findViewById(R.id.btnInsertar);
-        btnChose =findViewById(R.id.btnChoose);
-        btnDelete= findViewById(R.id.btnDelete);
-        btnUpdate=findViewById(R.id.btnUpdate);
-        btnSearch=findViewById(R.id.btnSearch);
-        imageView = findViewById(R.id.imgSlected);
+
+        binding = ActivityFormMapsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         Intent intent = getIntent();
-        name = intent.getStringExtra("name");
-        textView.setText(name);
-        if("PRODUCTS".equals(name)){
-            field1.setHint("Nombre");
-            field2.setHint("Descripcion");
-            field3.setHint("Precio");
-            field4.setHint("ID");
+        nameTable = intent.getStringExtra("name");
+        dbHelper = new DBHelper(getApplicationContext());
+        id =(EditText) findViewById(R.id.txtId);
+        name=(EditText) findViewById(R.id.edName);
+        description=(EditText) findViewById(R.id.edDescription);
+        location =(TextView) findViewById(R.id.txtLocation);
+        btnInsert = (Button)  findViewById(R.id.btnInsert);
+        btnUpdate = (Button)  findViewById(R.id.btnEdit);
+        btnDelete = (Button)  findViewById(R.id.btnDel);
+        btnChoose=  (Button) findViewById(R.id.btnChooseTiendas);
+        btnChoose.setOnClickListener(this);
+        btnSearch = (Button)  findViewById(R.id.btnSearchT);
+        imagestore = (ImageView) findViewById(R.id.imgTienda);
+        imagestore.setImageResource(R.drawable.ic_baseline_add_photo_alternate_24);
 
-        }else if("SERVICES".equals(name)){
-            field1.setHint("Nombre");
-            field2.setHint("Descripcion");
-            field3.setHint("Precio");
-            field4.setHint("ID");
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
-        }else if("STORES".equals(name)){
-            field1.setHint("Nombre");
-            field2.setHint("Descripcion");
-            field3.setHint("Ubicacion");
-            field3.setInputType(InputType.TYPE_CLASS_TEXT);
-            field4.setHint("ID");
-        }
-
-        btnChose.setOnClickListener(this);
         btnInsert.setOnClickListener(this);
         btnSearch.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnUpdate.setOnClickListener(this);
 
+
     }
 
-    public void fillFields(){
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        byte zoom=5;
+        mMap = googleMap;
+        // Add a marker in Sydney and move the camera
+        LatLng bogota = new LatLng(4, -74);
+        mMap.addMarker(new MarkerOptions().position(bogota).title("Marker in Bogota"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bogota,zoom));
+       // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom());
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                location.setText(latLng.latitude+", "+latLng.longitude);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.clear();
+                mMap.addMarker( new MarkerOptions().position(latLng));
+            }
+        });
 
-        field1Insert = field1.getText().toString().trim();
-        field2Insert = field2.getText().toString().trim();
-        field3Insert = field3.getText().toString().trim();
-        imageInsert = new HandlingImages().imageViewToByte(imageView);
     }
 
-    public void cleanFilds(){
-        field1.setText("");
-        field2.setText("");
-        field3.setText("");
-        field4.setText("");
-        imageView.setImageResource(R.drawable.ic_baseline_add_photo_alternate_24);
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnInsert:insert(view);
+               break;
+            case R.id.btnChooseTiendas:selectImages();
+                break;
+            case  R.id.btnSearchT:search();
+              break;
+            case  R.id.btnDel:delete(view);
+              break;
+           case R.id.btnEdit:update(view);
+             break;
+            //case R.id.map:MarkMap();
+        }
+
+    }
+
+
+
+    public void selectImages(){
+        ActivityCompat.requestPermissions(
+                FormMapsActivity.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_CODE_GALLERY
+        );
+
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-       if(requestCode == REQUEST_CODE_GALLERY){
-           if(grantResults.length >0  && grantResults[0] == getPackageManager().PERMISSION_GRANTED){
+        if(requestCode == REQUEST_CODE_GALLERY){
+            if(grantResults.length >0  && grantResults[0] == getPackageManager().PERMISSION_GRANTED){
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_CODE_GALLERY);
-           }else{
-               Toast.makeText(getApplicationContext(), "Sin Autorizacion", Toast.LENGTH_SHORT).show();
-           }
-       }
+            }else{
+                Toast.makeText(getApplicationContext(), "Sin Autorizacion", Toast.LENGTH_SHORT).show();
+            }
+        }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
@@ -133,7 +159,7 @@ public class FormActivity extends AppCompatActivity implements  View.OnClickList
             try{
                 InputStream inputStream = getContentResolver().openInputStream(uri);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                imageView.setImageBitmap(bitmap);
+                imagestore.setImageBitmap(bitmap);
 
             }catch (FileNotFoundException e){
 
@@ -141,25 +167,6 @@ public class FormActivity extends AppCompatActivity implements  View.OnClickList
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btnInsertar:insert(view);
-            break;
-            case R.id.btnChoose:selectImage();
-            break;
-            case  R.id.btnSearch:search();
-            break;
-            case  R.id.btnDelete:delete(view);
-            break;
-            case R.id.btnUpdate:update(view);
-        }
-
-
-    }
-
     public void insert(View view){
         operation(view, "Agregar", "Seguro Desea Agregar", ADD);
 
@@ -167,7 +174,7 @@ public class FormActivity extends AppCompatActivity implements  View.OnClickList
 
     public void search(){
 
-        Cursor cursor= dbHelper.searchDataById(name, field4.getText().toString().trim());
+        Cursor cursor= dbHelper.searchDataById(nameTable, id.getText().toString().trim());
 
         if(cursor.getCount()<1){
             Toast toast = Toast.makeText(getApplicationContext(), "No encontrado ", Toast.LENGTH_SHORT);
@@ -178,13 +185,13 @@ public class FormActivity extends AppCompatActivity implements  View.OnClickList
             toast.show();
 
         }
-            while(cursor.moveToNext()){
-                field1.setText(cursor.getString(1));
-                field2.setText(cursor.getString(2));
-                field3.setText(cursor.getString(3));
-                imageView.setImageBitmap(new HandlingImages().imagetoBitmap(cursor.getBlob(4)));
+        while(cursor.moveToNext()){
+            name.setText(cursor.getString(1));
+            description.setText(cursor.getString(2));
+            location.setText(cursor.getString(3));
+            imagestore.setImageBitmap(new HandlingImages().imagetoBitmap(cursor.getBlob(4)));
 
-            }
+        }
 
 
 
@@ -200,10 +207,18 @@ public class FormActivity extends AppCompatActivity implements  View.OnClickList
     }
     public void selectImage(){
         ActivityCompat.requestPermissions(
-                FormActivity.this,
+                FormMapsActivity.this,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_CODE_GALLERY
         );
 
+    }
+
+    public void cleanFilds(){
+        id.setText("");
+        name.setText("");
+        description.setText("");
+        location.setText("");
+        imagestore.setImageResource(R.drawable.ic_baseline_add_photo_alternate_24);
     }
 
     public void operation(View view, String title, String mesage, int operacion){
@@ -219,13 +234,13 @@ public class FormActivity extends AppCompatActivity implements  View.OnClickList
                         public void onClick(DialogInterface dialog, int which) {
                             String respuesta="";
                             switch (operacion){
-                                case ADD: dbHelper.insertData(field1Insert, field2Insert,field3Insert, imageInsert, name);
+                                case ADD: dbHelper.insertData(name.getText().toString().trim(), description.getText().toString().trim(),location.getText().toString().trim(), new HandlingImages().imageViewToByte(imagestore), nameTable);
                                     respuesta="Agregado";
                                     break;
-                                case  UPDATE:dbHelper.updateDataById(field4.getText().toString().trim(),name,field1Insert, field2Insert,field3Insert, imageInsert);
+                                case  UPDATE:dbHelper.updateDataById(id.getText().toString().trim(),nameTable,name.getText().toString().trim(), description.getText().toString().trim(),location.getText().toString().trim(), new HandlingImages().imageViewToByte(imagestore));
                                     respuesta="ACtualizado";
                                     break;
-                                case  DELETE:   dbHelper.deteteDataById(name, field4.getText().toString().trim());
+                                case  DELETE:   dbHelper.deteteDataById(nameTable, id.getText().toString().trim());
                                     respuesta="Eliminado";
                                     break;
                             }
@@ -254,7 +269,7 @@ public class FormActivity extends AppCompatActivity implements  View.OnClickList
                     .setCancelable(false);
             AlertDialog alert = builder.create();
             alert.show();
-            fillFields();
+
 
         }catch (Exception e){
             Snackbar.make(view, "Ocurrio Un error", Snackbar.LENGTH_SHORT).show();

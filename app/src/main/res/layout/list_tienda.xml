@@ -50,14 +50,14 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txtUbicacionTienda"
+                    android:id="@+id/txtDescriptionStore"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/txt_ubicacion"
                     android:textSize="17sp" />
 
                 <TextView
-                    android:id="@+id/txtHorarioTienda"
+                    android:id="@+id/txtUbicacionTienda"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
                     android:text="@string/txt_horario"

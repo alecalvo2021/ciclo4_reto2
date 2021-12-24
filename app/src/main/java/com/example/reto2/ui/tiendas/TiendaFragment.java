@@ -20,23 +20,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reto2.FormActivity;
+import com.example.reto2.FormMapsActivity;
 import com.example.reto2.R;
-import com.example.reto2.adaptadores.ProductosAdapter;
+import com.example.reto2.ShowMapsActivity;
 import com.example.reto2.adaptadores.TiendaAdapter;
 import com.example.reto2.databinding.FragmentTiendaBinding;
 import com.example.reto2.datos.DBHelper;
-import com.example.reto2.modelo.Producto;
 import com.example.reto2.modelo.Tienda;
-import com.example.reto2.util.PruductsRepository;
 import com.example.reto2.util.TiendaRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TiendaFragment extends Fragment {
 
     FragmentTiendaBinding binding;
     RecyclerView reciclerView;
+    private Tienda tienda;
     List<Tienda> tiendas;
     private DBHelper dbHelper;
     private String TABLE_NAME="STORES";
@@ -54,6 +53,7 @@ public class TiendaFragment extends Fragment {
             reciclerView = view.findViewById(R.id.rcv_tienda);
             reciclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             TiendaAdapter adapter = new TiendaAdapter(tiendas, getContext());
+
             reciclerView.setAdapter(adapter);
 
 
@@ -86,18 +86,18 @@ public class TiendaFragment extends Fragment {
         Intent intent;
         switch (item.getItemId()){
             case R.id.action_add:
-                intent = new Intent(getContext(), FormActivity.class);
+                intent = new Intent(getContext(), FormMapsActivity.class);
                 intent.putExtra("name",TABLE_NAME);
                 getActivity().startActivity(intent);
                 return true;
 
             case R.id.action_update:
-                intent = new Intent(getContext(), FormActivity.class);
+                intent = new Intent(getContext(), FormMapsActivity.class);
                 intent.putExtra("name",TABLE_NAME);
                 getActivity().startActivity(intent);
                 return true;
             case R.id.action_delete:
-                intent = new Intent(getContext(), FormActivity.class);
+                intent = new Intent(getContext(), FormMapsActivity.class);
                 intent.putExtra("name",TABLE_NAME);
                 getActivity().startActivity(intent);
                 return true;

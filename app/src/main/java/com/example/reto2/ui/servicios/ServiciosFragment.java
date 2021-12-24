@@ -57,7 +57,6 @@ public class ServiciosFragment extends Fragment {
 
 
         }catch (Exception e){
-            System.out.println("Esto es lo que psas =>"+ e.toString());
             Toast.makeText(getContext(),e.toString(),Toast.LENGTH_SHORT).show();
         }
         return view;

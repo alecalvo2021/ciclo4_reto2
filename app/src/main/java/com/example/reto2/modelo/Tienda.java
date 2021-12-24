@@ -1,27 +1,35 @@
 package com.example.reto2.modelo;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Tienda {
 
 
-    private final String nombreTienda;
-    private final String UbicacionTienda;
-    private final String horarioTienda;
+    private  String nombreTienda;
+    private  String description;
+    private  String ubicacion;
     private byte[] imagenTienda;
     private  int id;
 
-    public Tienda(int id, String nombreTienda, String ubicacionTienda, String horarioTienda, byte [] imagenTienda) {
+    public Tienda(String nombreTienda, String ubicacionTienda) {
+        this.nombreTienda = nombreTienda;
+        this.ubicacion = ubicacionTienda;
+
+    }
+
+    public Tienda(int id, String nombreTienda, String descriptionTienda, String ubicacionTienda, byte [] imagenTienda) {
         this.id=id;
         this.nombreTienda = nombreTienda;
-        UbicacionTienda = ubicacionTienda;
-        this.horarioTienda = horarioTienda;
+        this.description = descriptionTienda;
+        this.ubicacion = ubicacionTienda;
         this.imagenTienda = imagenTienda;
     }
 
 
-    public Tienda(String nombreTienda, String ubicacionTienda, String horarioTienda, byte[] imagenTienda) {
+    public Tienda(String nombreTienda,  String descriptionTienda ,String ubicacionTienda, byte[] imagenTienda) {
         this.nombreTienda = nombreTienda;
-        UbicacionTienda = ubicacionTienda;
-        this.horarioTienda = horarioTienda;
+        this.description = descriptionTienda;
+        this.ubicacion = ubicacionTienda;
         this.imagenTienda = imagenTienda;
     }
 
@@ -30,16 +38,25 @@ public class Tienda {
     }
 
 
-    public String getUbicacionTienda() {
-        return UbicacionTienda;
+    public String getDescription() {
+        return description;
     }
 
-    public String getHorarioTienda() {
-        return horarioTienda;
+    public String getUbicacion() {
+        return ubicacion;
     }
 
     public byte[] getImagenTienda() {
         return imagenTienda;
+    }
+
+    public LatLng locationToCoord(){
+        System.out.println("la ubicacion es =>"+ubicacion);
+        String[] coords = this.ubicacion.split(",");
+        Double latitud = Double.parseDouble(coords[0]);
+        Double longitud = Double.parseDouble(coords[1]);
+        LatLng latLng = new LatLng(latitud,longitud);
+        return latLng;
     }
 }
 

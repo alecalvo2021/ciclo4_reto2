@@ -48,12 +48,13 @@ public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         ImageView iconImage;
-        TextView nombreServicio, descripcionServicio;
+        TextView nombreServicio, descripcionServicio, valor;
         ViewHolder(View view){
             super(view);
             iconImage=view.findViewById(R.id.imgServicio);
             nombreServicio = view.findViewById(R.id.txtNombreServicio);
             descripcionServicio= view.findViewById(R.id.txtDescripcionServicio);
+            valor=view.findViewById(R.id.txtValorServicio);
 
         }
 
@@ -61,7 +62,7 @@ public class ServiciosAdapter extends RecyclerView.Adapter<ServiciosAdapter.View
             nombreServicio.setText(servicios.getNombreServicio());
             descripcionServicio.setText(servicios.getDescripcionServicio());
             iconImage.setImageBitmap(new HandlingImages().imagetoBitmap(servicios.getImageService()));
-
+            valor.setText(servicios.getValor());
         }
 
 

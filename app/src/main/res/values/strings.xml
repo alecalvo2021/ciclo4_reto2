@@ -21,6 +21,8 @@
     <string name="txt_valor">Valor</string>
     <string name="txt_ubicacion">la ubicacion de los locales</string>
     <string name="txt_horario">el horario de atencion al publico</string>
+    <string name="title_activity_form_maps">FormMapsActivity</string>
+    <string name="title_activity_show_maps">ShowMapsActivity</string>
 
 
 </resources>

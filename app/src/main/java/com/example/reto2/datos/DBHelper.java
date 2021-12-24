@@ -20,7 +20,7 @@ private SQLiteDatabase sqLiteDatabase;
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE PRODUCTS(" +
                 "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "name_product VARCHAR," +
+                "name VARCHAR," +
                 "description VARCHAR," +
                 "price VARCHAR," +
                 "image BLOB"+
@@ -28,7 +28,7 @@ private SQLiteDatabase sqLiteDatabase;
 
         db.execSQL("CREATE TABLE SERVICES(" +
                 "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "name_service VARCHAR," +
+                "name VARCHAR," +
                 "description  VARCHAR," +
                 "price VARCHAR," +
                 "image BLOB"+
@@ -36,9 +36,9 @@ private SQLiteDatabase sqLiteDatabase;
 
         db.execSQL("CREATE TABLE STORES(" +
                 "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "name_store VARCHAR," +
+                "name VARCHAR," +
+                "description VARCHAR," +
                 "location VARCHAR," +
-                "shedule VARCHAR," +
                 "image BLOB"+
                 ")");
 
@@ -54,7 +54,6 @@ private SQLiteDatabase sqLiteDatabase;
     }
     public void insertData(String field1, String field2, String field3, byte[] image, String nameTable ){
         String sql="INSERT INTO "+ nameTable+ " VALUES(null,?,?,?,?)";
-        System.out.println("la sentencia es=> "+sql);
         SQLiteStatement statement = sqLiteDatabase.compileStatement(sql);
         statement.clearBindings();
         statement.bindString(1,field1);
@@ -81,9 +80,14 @@ private SQLiteDatabase sqLiteDatabase;
 
     public void updateDataById(String id, String nameTable, String field1, String field2, String field3, byte[] image){
         ContentValues contentValues = new ContentValues();
-        contentValues.put("name_product ", field1);
+        contentValues.put("name ", field1);
         contentValues.put("description", field2);
-        contentValues.put("price", field3);
+        if("STORES".equals(nameTable)){
+            contentValues.put("location", field3);
+        }else{
+            contentValues.put("price", field3);
+        }
+
         contentValues.put("image", image);
         sqLiteDatabase.update(nameTable, contentValues, "id =?",new String[]{id});
 
